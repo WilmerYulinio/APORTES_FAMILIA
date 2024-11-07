@@ -1,0 +1,21 @@
+<!-- templates/request_edit_access.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso a Edición</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body class="container">
+    <h2 class="text-center">Ingrese la Contraseña de Edición</h2>
+    
+    <form method="post" action="{{ url_for('request_edit_access') }}">
+        <label for="password">Contraseña de Edición</label>
+        <input type="password" name="password" required>
+        <button type="submit" class="btn">Ingresar</button>
+    </form>
+
+    <a href="{{ url_for('view') }}" class="btn btn-secondary">Cancelar</a>
+</body>
+</html>

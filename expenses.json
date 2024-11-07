@@ -1,0 +1,19 @@
+{
+    "2024-10": [
+        {
+            "amount": 30.0,
+            "reason": "pasaje de antony.",
+            "date": "2024-10-03"
+        },
+        {
+            "amount": 40.0,
+            "reason": "gasolina para moto",
+            "date": "2024-10-03"
+        },
+        {
+            "amount": 100.0,
+            "reason": "pago para 2 personal",
+            "date": "2024-10-03"
+        }
+    ]
+}

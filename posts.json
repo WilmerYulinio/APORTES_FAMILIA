@@ -1,0 +1,52 @@
+[
+    {
+        "id": "c605c920-c89a-44fb-a020-14cd537c7a69",
+        "username": "yulinio",
+        "content": "hola con todos",
+        "image": "images/posts/yulinio_1730960409.898492_image.jpg",
+        "video": null,
+        "audio": null,
+        "date": "2024-11-07T01:20:09.919466",
+        "likes": 1,
+        "hearts": 1,
+        "comments": [
+            {
+                "username": "yulinio",
+                "text": "joi\u00b4fj apojva\u00b4mijfam\u00f1isjf",
+                "audio": null,
+                "date": "2024-11-07T07:59:37.640698"
+            }
+        ]
+    },
+    {
+        "id": "afba0a8e-a952-426c-ab38-e380f12ee5ef",
+        "username": "yulinio",
+        "content": "muy bella",
+        "image": "images/posts/yulinio_1730985554.986698_image.jpg",
+        "video": null,
+        "audio": null,
+        "date": "2024-11-07T08:19:15.020605",
+        "likes": 0,
+        "hearts": 0,
+        "comments": []
+    },
+    {
+        "id": "7d8ae790-cb80-451e-9d9b-fcd5eba414ec",
+        "username": "yulinio",
+        "content": "linda",
+        "image": null,
+        "video": null,
+        "audio": "images/posts/yulinio_1730993281.881329_audio.mp3",
+        "date": "2024-11-07T10:28:14.631861",
+        "likes": 1,
+        "hearts": 1,
+        "comments": [
+            {
+                "username": "yulinio",
+                "text": "linda voz",
+                "audio": "images/posts/yulinio_1730993354.627418_comment.mp3",
+                "date": "2024-11-07T10:29:17.523517"
+            }
+        ]
+    }
+]

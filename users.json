@@ -1,0 +1,12 @@
+{
+    "Wilmer": {
+        "password": "scrypt:32768:8:1$xw5QaEucB2xTCmd0$5387fd1daf76f9e57094dd279dc31c0a3478b518855ae0d5a01168f9fd5547470e356ae090fc07fa6a650c58f710ea5894ceb109aaaac7c5ed22aa288ae7b736",
+        "profile_picture": "images/profiles/Wilmer_profile.jpg",
+        "name": "wilmer"
+    },
+    "yulinio": {
+        "password": "scrypt:32768:8:1$igcwI33bZe2rrKEr$8799ac59b80d77f19a76fb65ef4a2afe596945375762607e9f4cd404b5d319d07f0299bcf49646582ca5f838aaeda25d78a1ca283f219634b30d80b77cc19ca0",
+        "profile_picture": "images/profiles/yulinio_profile.jpg",
+        "name": "yulinio"
+    }
+}

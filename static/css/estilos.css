@@ -1,0 +1,234 @@
+/* Estilo básico */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f8fc;
+    color: #333;
+    margin: 0;
+}
+
+.container {
+    max-width: 100%; /* Ajuste para tomar todo el ancho en dispositivos móviles */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1, h2 {
+    color: #4b6584;
+    margin-bottom: 20px;
+}
+
+/* Navegación */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffd700;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-menu a,
+.navbar a {
+    color: #333;
+    margin-right: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-user img,
+.profile-thumbnail {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Formularios */
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select,
+textarea,
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button,
+.btn {
+    background-color: #3867d6;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button:hover,
+.btn:hover {
+    background-color: #4b6584;
+}
+
+/* Tabla de Aportes */
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+/* Estado de Aporte */
+.bg-green {
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+.bg-red {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+.bg-blue {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+.bg-white {
+    background-color: #ffffff !important;
+    color: #333333 !important;
+}
+
+/* Publicaciones */
+.posts {
+    margin-top: 20px;
+}
+
+.post {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+}
+
+.post-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.post-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Flash Message */
+.flash-message {
+    color: red;
+    font-weight: bold;
+}
+
+/* Botones de reacción */
+.reaction-btn {
+    font-size: 2em;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+/* Efecto de agrandamiento para botones de reacción */
+.reaction-btn:active {
+    transform: scale(1.2);
+}
+
+/* Botón de like específico */
+.like-btn {
+    font-size: 1.5em;
+    transition: transform 0.2s ease;
+}
+
+/* Responsividad para dispositivos móviles */
+@media only screen and (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .navbar-menu a,
+    .navbar a {
+        margin-right: 10px;
+        font-size: 0.9em;
+    }
+
+    .post-header img,
+    .navbar-user img {
+        width: 35px;
+        height: 35px;
+    }
+
+    button,
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+
+    .table th,
+    .table td {
+        padding: 8px;
+    }
+
+    .reaction-btn {
+        font-size: 1.5em;
+    }
+}

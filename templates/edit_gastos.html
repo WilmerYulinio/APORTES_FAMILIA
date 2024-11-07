@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Gastos del Mes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <h2 class="text-center">Gastos del Mes: {{ month }}/{{ year }}</h2>
+    
+    <!-- Lista de Gastos Registrados -->
+    <h3>Gastos Registrados</h3>
+    <ul>
+        {% if month_expenses %}
+            {% for expense in month_expenses %}
+                <li>{{ expense['date'] }} - {{ expense['reason'] }}: S/. {{ expense['amount'] }}</li>
+            {% endfor %}
+        {% else %}
+            <p>No hay gastos registrados para este mes.</p>
+        {% endif %}
+    </ul>
+
+    {% if from_edit %}
+        <!-- Formulario para agregar un nuevo gasto, solo si se accede desde edit -->
+        <h3>Agregar Nuevo Gasto</h3>
+        <form action="{{ url_for('gastos', month=month, year=year, from_edit='true') }}" method="post">
+            <label for="amount">Monto del Gasto:</label>
+            <input type="number" step="0.01" name="amount" required>
+
+            <label for="reason">Motivo del Gasto:</label>
+            <input type="text" name="reason" required>
+
+            <button type="submit" class="btn">Agregar Gasto</button>
+        </form>
+    {% endif %}
+
+    <br>
+    <!-- Botón para regresar a la página de edición principal -->
+    <a href="{{ url_for('edit', month=month, year=year) }}" class="btn btn-secondary">Regresar a Editar Aportes</a>
+</body>
+</html>

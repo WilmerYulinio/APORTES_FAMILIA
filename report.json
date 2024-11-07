@@ -1,0 +1,187 @@
+{
+    "2024-11": {
+        "individual_reports": {
+            "Antony": {
+                "contributed": 20,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Nelver": {
+                "contributed": 40,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Nayda": {
+                "contributed": 0,
+                "debt": 20,
+                "debt_dates": [
+                    "2024-11-03"
+                ],
+                "exonerated_dates": [],
+                "status": "En deuda"
+            },
+            "Enma": {
+                "contributed": 20,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Reyna": {
+                "contributed": 0,
+                "debt": 20,
+                "debt_dates": [
+                    "2024-11-03"
+                ],
+                "exonerated_dates": [],
+                "status": "En deuda"
+            },
+            "Indalicia": {
+                "contributed": 0,
+                "debt": 20,
+                "debt_dates": [
+                    "2024-11-03"
+                ],
+                "exonerated_dates": [],
+                "status": "En deuda"
+            },
+            "Naty": {
+                "contributed": 20,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Lucia": {
+                "contributed": 0,
+                "debt": 20,
+                "debt_dates": [
+                    "2024-11-03"
+                ],
+                "exonerated_dates": [],
+                "status": "En deuda"
+            },
+            "Wilmer": {
+                "contributed": 0,
+                "debt": 20,
+                "debt_dates": [
+                    "2024-11-03"
+                ],
+                "exonerated_dates": [],
+                "status": "En deuda"
+            }
+        },
+        "total_collected": 100,
+        "total_debt": 100,
+        "previous_balance": 490.0,
+        "total_balance": 590.0,
+        "total_expenses": 0,
+        "saldo_real": 100
+    },
+    "2024-10": {
+        "individual_reports": {
+            "Nelver": {
+                "contributed": 80,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Nayda": {
+                "contributed": 80,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Enma": {
+                "contributed": 80,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Reyna": {
+                "contributed": 80,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Indalicia": {
+                "contributed": 60,
+                "debt": 20,
+                "debt_dates": [
+                    "2024-10-27"
+                ],
+                "exonerated_dates": [],
+                "status": "En deuda"
+            },
+            "Lucia": {
+                "contributed": 80,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Naty": {
+                "contributed": 80,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Wilmer": {
+                "contributed": 80,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Al d\u00eda"
+            },
+            "Antony": {
+                "contributed": 40,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [
+                    "2024-10-06",
+                    "2024-10-13"
+                ],
+                "status": "Al d\u00eda"
+            }
+        },
+        "total_collected": 660,
+        "total_debt": 20,
+        "previous_balance": 0,
+        "total_balance": 490.0,
+        "total_expenses": 170.0,
+        "saldo_real": 490.0
+    },
+    "2024-12": {
+        "individual_reports": {
+            "Nelver": {
+                "contributed": 0,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Sin contribuciones"
+            },
+            "Nayda": {
+                "contributed": 0,
+                "debt": 0,
+                "debt_dates": [],
+                "exonerated_dates": [],
+                "status": "Sin contribuciones"
+            }
+        },
+        "total_collected": 0,
+        "total_debt": 0,
+        "previous_balance": 590.0,
+        "total_balance": 590.0,
+        "total_expenses": 0,
+        "saldo_real": 0
+    }
+}

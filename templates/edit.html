@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Aportes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body class="container">
+    <h2 class="text-center">Editar Aportes</h2>
+
+    <!-- Selección de Mes -->
+    <div class="calendar-container">
+        <h3>Seleccione el Mes</h3>
+        <div>
+            {% for month in range(1, 13) %}
+                <button class="month-btn {% if month == selected_month %}current-month{% endif %}" onclick="selectMonth({{ month }})">
+                    {{ month_names[month - 1] }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Botón para ir a la página de gastos -->
+    <a href="{{ url_for('gastos', month=selected_month, year=selected_year, from_edit='true') }}" class="btn btn-secondary">Ver Gastos</a>
+
+
+
+    <!-- Tabla de Aportes del Mes Seleccionado -->
+    <h3 class="text-center">Aportes del Mes: {{ selected_month_name }}</h3>
+    <form action="{{ url_for('save_contributions') }}" method="post">
+        <input type="hidden" name="selected_month" value="{{ selected_month }}">
+        <input type="hidden" name="selected_year" value="{{ selected_year }}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Integrante</th>
+                    {% for sunday in sundays_of_selected_month %}
+                        <th>{{ sunday.strftime('%d/%m') }}</th>
+                    {% endfor %}
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                    <tr>
+                        <td class="name-cell">{{ member }}</td>
+                        {% for sunday in sundays_of_selected_month %}
+                            <td>
+                                <select name="contribution_status[{{ member }}][{{ sunday.strftime('%Y-%m-%d') }}]"
+                                        class="status-select" 
+                                        onchange="updateColor(this)">
+                                    <option value="check" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) == 'check' %}selected{% endif %}>✓</option>
+                                    <option value="x-red" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) == 'x-red' %}selected{% endif %}>X</option>
+                                    <option value="o-blue" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) == 'o-blue' %}selected{% endif %}>O</option>
+                                    <option value="blank" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) in [None, 'blank'] %}selected{% endif %}>...</option>
+                                </select>
+                            </td>
+                        {% endfor %}
+                        <td>
+                            <form action="{{ url_for('delete_member') }}" method="post" style="display:inline;">
+                                <input type="hidden" name="selected_month" value="{{ selected_month }}">
+                                <input type="hidden" name="selected_year" value="{{ selected_year }}">
+                                <input type="hidden" name="member" value="{{ member }}">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar a {{ member }}?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+        <button type="submit" class="btn">Guardar Cambios</button>
+    </form>
+
+    <!-- Formulario para agregar nuevo integrante -->
+    <h3>Agregar Nuevo Integrante</h3>
+    <form action="{{ url_for('add_member') }}" method="post">
+        <input type="hidden" name="selected_month" value="{{ selected_month }}">
+        <input type="hidden" name="selected_year" value="{{ selected_year }}">
+        <label for="new_member">Nombre del nuevo integrante:</label>
+        <input type="text" name="new_member" required>
+        <button type="submit" class="btn">Agregar Integrante</button>
+    </form>
+    
+    <!-- Reporte de Aportes y Deudas -->
+    <h3>Reporte de Aportes y Deudas</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Integrante</th>
+                <th>Aportado</th>
+                <th>Deuda</th>
+                <th>Estado</th>
+                <th>Fechas de Deuda</th>
+                <th>Fechas de Exoneración</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member, report in report_data.individual_reports.items() %}
+                <tr>
+                    <td>{{ member }}</td>
+                    <td>{{ report.contributed }}</td>
+                    <td>{{ report.debt }}</td>
+                    <td>{{ report.status }}</td>
+                    <td>{{ report.debt_dates | join(", ") }}</td>
+                    <td>{{ report.exonerated_dates | join(", ") }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h3>Resumen Financiero</h3>
+    <p>Total Recaudado: {{ report_data.total_collected }}</p>
+    <p>Total Gastos: {{ report_data.total_expenses }}</p>
+    <p>Saldo Real: {{ report_data.saldo_real }}</p>
+    <p>Recaudación del Mes Anterior: {{ report_data.previous_balance }}</p>
+    <p>Recaudación Real: {{ report_data.total_balance }}</p>
+
+    <!-- Botón para regresar a Ver Cuotas -->
+    <a href="{{ url_for('view') }}" class="btn btn-secondary">Volver a Ver Cuotas</a>
+
+    <!-- JavaScript para actualizar color -->
+    <script>
+        function selectMonth(month) {
+            window.location.href = "{{ url_for('edit') }}?month=" + month;
+        }
+
+        function updateColor(selectElement) {
+            const value = selectElement.value;
+            selectElement.parentElement.classList.remove('bg-green', 'bg-red', 'bg-blue', 'bg-white');
+            if (value === 'check') selectElement.parentElement.classList.add('bg-green');
+            if (value === 'x-red') selectElement.parentElement.classList.add('bg-red');
+            if (value === 'o-blue') selectElement.parentElement.classList.add('bg-blue');
+            if (value === 'blank') selectElement.parentElement.classList.add('bg-white');
+        }
+
+        document.querySelectorAll('.status-select').forEach(updateColor);
+    </script>
+</body>
+</html>

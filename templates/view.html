@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido, {{ session['username'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body class="container">
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="navbar-menu">
+            <a href="#principal" onclick="showSection('principal')">Principal</a>
+            <a href="#cuotas" onclick="showSection('cuotas')">Cuotas</a>
+            <a href="#control" onclick="showSection('control')">Control</a>
+            <a href="#camaras" onclick="showSection('camaras')">Camaras</a>
+            
+        </div>
+        <div class="navbar-user">
+            <a href="{{ url_for('edit_profile') }}">
+                {% if profile_picture %}
+                    <img src="{{ url_for('static', filename=profile_picture) }}" alt="Perfil" class="profile-thumbnail">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/profiles/default_profile.jpg') }}" alt="Perfil" class="profile-thumbnail">
+                {% endif %}
+            </a>
+            <span>{{ session['username'] }}</span>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Sección de Bienvenida -->
+    <h1 class="text-center">Bienvenido, {{ session['username'] }}!</h1>
+    <p class="text-center">¡Aquí puedes gestionar tus aportes y ver tus publicaciones!</p>
+
+    <!-- Sección de Publicaciones -->
+    <section id="principal">
+        <h2>Publicaciones</h2>
+        <form action="{{ url_for('add_post') }}" method="post" enctype="multipart/form-data">
+            <textarea name="content" placeholder="¿Qué estás pensando?" required></textarea>
+            <label for="image">Imagen:</label>
+            <input type="file" name="image" accept="image/*">
+            <label for="video">Video:</label>
+            <input type="file" name="video" accept="video/*">
+            <label for="audio">Audio:</label>
+            <input type="file" name="audio" accept="audio/*">
+            <button type="submit">Publicar</button>
+        </form>
+
+        <div class="posts">
+            {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <img src="{{ url_for('static', filename=post.get('profile_picture', 'images/profiles/default_profile.jpg')) }}" alt="Imagen del Usuario" class="profile-thumbnail">
+                    <span>{{ post.username }}</span>
+                    <span class="post-date">{{ post.date }}</span>
+                </div>
+                <p>{{ post.content }}</p>
+                
+                <!-- Mostrar el contenido multimedia si existe -->
+                {% if post.image %}
+                    <img src="{{ url_for('static', filename=post.image) }}" alt="Imagen de la Publicación" class="post-image">
+                {% endif %}
+                {% if post.video %}
+                    <video controls class="post-video">
+                        <source src="{{ url_for('static', filename=post.video) }}" type="video/mp4">
+                    </video>
+                {% endif %}
+                {% if post.audio %}
+                    <audio controls class="post-audio">
+                        <source src="{{ url_for('static', filename=post.audio) }}" type="audio/mpeg">
+                    </audio>
+                {% endif %}
+                
+                <!-- Sección de reacciones y contadores -->
+                <div class="post-actions">
+                    <div>
+                        <span id="like-count-{{ post.id }}">👍 {{ post.likes }}</span>
+                        <span id="heart-count-{{ post.id }}">❤️ {{ post.hearts }}</span>
+                    </div>
+                    <!-- Botones de reacción -->
+                    <button id="like-btn-{{ post.id }}" 
+                            onclick="sendReaction('{{ post.id }}', 'like')">👍</button>
+                    <button id="heart-btn-{{ post.id }}" 
+                            onclick="sendReaction('{{ post.id }}', 'heart')">❤️</button>
+                    <span class="toggle-comments" onclick="toggleComments('{{ post.id }}')">💬 {{ post.comments | length }} Comentarios</span>
+                </div>
+                
+                <!-- Formulario para agregar un comentario -->
+                <form action="{{ url_for('add_comment') }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <textarea name="comment_text" placeholder="Escribe un comentario"></textarea>
+                    <label for="comment_audio">Comentario de Audio:</label>
+                    <input type="file" name="comment_audio" accept="audio/*">
+                    <button type="submit">Comentar</button>
+                </form>
+                
+                <!-- Mostrar comentarios, inicialmente ocultos -->
+                <div class="comments" id="comments-{{ post.id }}" style="display: none;">
+                    {% for comment in post.comments %}
+                    <div class="comment">
+                        <span><strong>{{ comment.username }}</strong>:</span>
+                        <p>{{ comment.text }}</p>
+                        
+                        {% if comment.audio %}
+                            <audio controls class="comment-audio">
+                                <source src="{{ url_for('static', filename=comment.audio) }}" type="audio/mpeg">
+                            </audio>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        </section> <!-- Cierre de la sección -->
+        
+
+    <!-- Sección de Cuotas -->
+    <section id="cuotas" style="display: none;">
+        <h2>Cuotas</h2>
+
+    <!-- Selección de Mes -->
+    <div class="calendar-container">
+        <h3>Seleccione el Mes</h3>
+        <div>
+            {% for month in range(1, 13) %}
+                <button class="month-btn {% if month == selected_month %}current-month{% endif %}" onclick="selectMonth({{ month }})">
+                    {{ month_names[month - 1] }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+        <!-- Botón para ir a la página de gastos -->
+        <a href="{{ url_for('gastos', month=selected_month, year=selected_year, from_edit='false') }}" class="btn btn-secondary">Ver Gastos</a>
+
+        <!-- Tabla de Aportes del Mes Seleccionado -->
+        <h3 class="text-center">Aportes del Mes: {{ selected_month_name }}</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Integrante</th>
+                    {% for sunday in sundays_of_selected_month %}
+                        <th>{{ sunday.strftime('%d/%m') }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                    <tr>
+                        <td class="name-cell">{{ member }}</td>
+                        {% for sunday in sundays_of_selected_month %}
+                            <td>
+                                <select name="contribution_status[{{ member }}][{{ sunday.strftime('%Y-%m-%d') }}]"
+                                        class="status-select" 
+                                        onchange="updateColor(this)">
+                                    <option value="check" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) == 'check' %}selected{% endif %}>✓</option>
+                                    <option value="x-red" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) == 'x-red' %}selected{% endif %}>X</option>
+                                    <option value="o-blue" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) == 'o-blue' %}selected{% endif %}>O</option>
+                                    <option value="blank" {% if contributions.get(member, {}).get(sunday.strftime('%Y-%m-%d')) in [None, 'blank'] %}selected{% endif %}>...</option>
+                                </select>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Reporte de Aportes y Deudas -->
+        <h3>Reporte de Aportes y Deudas</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Integrante</th>
+                    <th>Aportado</th>
+                    <th>Deuda</th>
+                    <th>Estado</th>
+                    <th>Fechas de Deuda</th>
+                    <th>Fechas de Exoneración</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member, report in report_data.individual_reports.items() %}
+                    <tr>
+                        <td>{{ member }}</td>
+                        <td>{{ report.contributed }}</td>
+                        <td>{{ report.debt }}</td>
+                        <td>{{ report.status }}</td>
+                        <td>{{ report.debt_dates | join(", ") }}</td>
+                        <td>{{ report.exonerated_dates | join(", ") }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Resumen Financiero -->
+        <h3>Resumen Financiero</h3>
+        <p>Total Recaudado: {{ report_data.total_collected }}</p>
+        <p>Total Gastos: {{ report_data.total_expenses }}</p>
+        <p>Saldo Real: {{ report_data.saldo_real }}</p>
+        <p>Recaudación del Mes Anterior: {{ report_data.previous_balance }}</p>
+        <p>Recaudación Real: {{ report_data.total_balance }}</p>
+    </section>
+
+
+
+
+
+
+
+        <!-- Enlace para editar aportes, solo si está autorizado -->
+        <div class="text-center" style="margin-top: 20px;">
+            {% if session.get('authorized_edit') %}
+                <a href="{{ url_for('edit') }}" class="btn">Editar Aportes</a>
+            {% else %}
+                <a href="{{ url_for('request_edit_access') }}" class="btn">Solicitar Acceso de Edición</a>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Sección de Control -->
+    <section id="control" style="display: none;">
+        <h2>Control del Drone</h2>
+        
+        <!-- Visualización de Cámara en la sección de Control -->
+        <div id="camera-view" class="camera-container">
+            <h3>Vista en Tiempo Real del Drone</h3>
+            <div>
+                {% if cameras %}
+                    {% for camera in cameras %}
+                        <iframe src="{{ camera.url }}" frameborder="0" class="camera-feed" width="400" height="300"></iframe>
+                    {% endfor %}
+                {% else %}
+                    <p>No hay cámaras conectadas. Por favor, conecta una cámara.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Botón de Emparejar para conectar con el drone a través de IoT -->
+        <button id="pair-button" onclick="pairDrone()">Emparejar con el Drone</button>
+        
+        <!-- Controles del Drone -->
+        <div id="drone-controls" style="display: none;">
+            <button onclick="sendCommand('power_on')">Encender</button>
+            <button onclick="sendCommand('power_off')">Apagar</button>
+            <button onclick="sendCommand('charge')">Cargar</button>
+            <button onclick="sendCommand('up')">Subir</button>
+            <button onclick="sendCommand('down')">Bajar</button>
+            <button onclick="sendCommand('left')">Izquierda</button>
+            <button onclick="sendCommand('right')">Derecha</button>
+            <button onclick="sendCommand('forward')">Adelante</button>
+            <button onclick="sendCommand('backward')">Atrás</button>
+        </div>
+
+        <p id="control-status">Estado del Control: No Conectado</p>
+    </section>
+
+    <!-- Sección de Cámaras (solo para agregar y conectar cámaras) -->
+    <section id="camaras" style="display: none;">
+        <h2>Cámaras</h2>
+        <form action="{{ url_for('connect_camera') }}" method="post">
+            <label for="camera_url">URL de la Cámara:</label>
+            <input type="text" name="camera_url" required>
+            <button type="submit">Conectar Cámara</button>
+        </form>
+    </section>
+    
+
+    <script>
+
+
+        function selectMonth(month) {
+            window.location.href = "{{ url_for('view') }}?month=" + month + "&year={{ selected_year }}";
+        }
+
+        function updateColor(selectElement) {
+            const value = selectElement.value;
+            selectElement.parentElement.classList.remove('bg-green', 'bg-red', 'bg-blue', 'bg-white');
+            if (value === 'check') selectElement.parentElement.classList.add('bg-green');
+            if (value === 'x-red') selectElement.parentElement.classList.add('bg-red');
+            if (value === 'o-blue') selectElement.parentElement.classList.add('bg-blue');
+            if (value === 'blank') selectElement.parentElement.classList.add('bg-white');
+        }
+
+        document.querySelectorAll('.status-select').forEach(updateColor);
+
+        // Función para mostrar la sección seleccionada
+        function showSection(sectionId) {
+            document.getElementById("principal").style.display = sectionId === "principal" ? "block" : "none";
+            document.getElementById("cuotas").style.display = sectionId === "cuotas" ? "block" : "none";
+            document.getElementById("control").style.display = sectionId === "control" ? "block" : "none";
+            document.getElementById("camaras").style.display = sectionId === "camaras" ? "block" : "none";
+        }
+
+        // Función para emparejar el sistema con el drone
+        function pairDrone() {
+            fetch('/pair_drone', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'connected') {
+                        document.getElementById('control-status').innerText = "Estado del Control: Conectado";
+                        document.getElementById('drone-controls').style.display = 'block'; // Muestra los controles
+                        document.getElementById('pair-button').style.display = 'none'; // Oculta el botón de emparejar
+                    } else {
+                        document.getElementById('control-status').innerText = "Estado del Control: No Conectado";
+                    }
+                })
+                .catch(error => console.error('Error al intentar emparejar:', error));
+        }
+
+        // Función para enviar comandos al controlador del drone
+        function sendCommand(command) {
+            fetch('/control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ command: command })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('control-status').innerText = `Comando: ${data.command} - ${data.status}`;
+            })
+            .catch(error => console.error('Error al enviar el comando:', error));
+        }
+
+
+// ------------------- Funciones para Reacciones (Me gusta y Corazoncito) ------------------- //
+// ------------------- Funciones para Reacciones (Me gusta y Corazoncito) ------------------- //
+
+function sendReaction(postId, reactionType) {
+    fetch(`/like_post/${postId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ reactionType: reactionType, points: 1 })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            // Actualizar visualmente los contadores de likes y hearts en la pantalla
+            document.getElementById(`like-count-${postId}`).innerText = `👍 ${data.likes}`;
+            document.getElementById(`heart-count-${postId}`).innerText = `❤️ ${data.hearts}`;
+        }
+    })
+    .catch(error => console.error("Error al enviar reacción:", error));
+}
+
+// Función para mostrar/ocultar comentarios
+function toggleComments(postId) {
+    const commentsSection = document.getElementById(`comments-${postId}`);
+    commentsSection.style.display = commentsSection.style.display === "none" ? "block" : "none";
+}
+
+
+// Función para sincronizar likes y corazones con el servidor
+function synchronizeLikesHearts() {
+    const posts = [];
+    document.querySelectorAll('.post').forEach(postElement => {
+        const postId = postElement.dataset.postId;
+        const likes = parseInt(document.getElementById(`like-count-${postId}`).innerText.split(' ')[1]);
+        const hearts = parseInt(document.getElementById(`heart-count-${postId}`).innerText.split(' ')[1]);
+        posts.push({ id: postId, likes, hearts });
+    });
+
+    fetch('/synchronize_likes_hearts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ posts: posts })
+    }).then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error("Error al sincronizar reacciones:", error));
+}
+
+      
+    </script>
+</body>
+</html>

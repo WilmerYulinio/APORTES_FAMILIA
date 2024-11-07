@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido, {{ user }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body class="container">
+    <h1 class="text-center">Bienvenido, {{ user }}!</h1>
+    {% if profile_picture %}
+        <div class="text-center">
+            <img src="{{ profile_picture }}" alt="Foto de Perfil" class="img-fluid">
+        </div>
+    {% endif %}
+    <p class="text-center">¡Aquí puedes gestionar tus aportes!</p>
+    <div class="text-center">
+        <a href="{{ url_for('edit') }}" class="btn">Ir a Aportes</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
+    </div>
+</body>
+</html>

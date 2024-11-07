@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body class="container">
+    <h2 class="text-center">Iniciar Sesión</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-message text-center">{{ messages[0] }}</div>
+        {% endif %}
+    {% endwith %}
+    <form method="post" action="{{ url_for('login') }}">
+        <label for="username">Nombre de Usuario</label>
+        <input type="text" name="username" required>
+        
+        <label for="password">Contraseña</label>
+        <input type="password" name="password" id="password" required>
+        
+        <input type="checkbox" id="showPassword" onclick="togglePassword()"> Mostrar Contraseña
+        
+        <button type="submit">Entrar</button>
+        <button type="reset">Reiniciar</button>
+    </form>
+    <p class="text-center mt-3">¿No tienes cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+   
+    <footer>
+        <p>Versión 1.0.0 - Proyecto APORTES_FAMILIA</p>
+    </footer>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            passwordField.type = passwordField.type === "password" ? "text" : "password";
+        }
+    </script>
+</body>
+</html>
