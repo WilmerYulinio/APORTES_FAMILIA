@@ -5,8 +5,7 @@ from PIL import Image
 import os
 import json
 import uuid
-import requests
-from moviepy.editor import VideoFileClip
+
 from pydub import AudioSegment
 
 app = Flask(__name__)
