@@ -133,7 +133,8 @@
     </div>
 
         <!-- Botón para ir a la página de gastos -->
-        <a href="{{ url_for('gastos', month=selected_month, year=selected_year, from_edit='false') }}" class="btn btn-secondary">Ver Gastos</a>
+        <a href="{{ url_for('view_gastos', month=selected_month, year=selected_year) }}" class="btn btn-secondary">Ver Gastos</a>
+
 
         <!-- Tabla de Aportes del Mes Seleccionado -->
         <h3 class="text-center">Aportes del Mes: {{ selected_month_name }}</h3>
@@ -202,22 +203,16 @@
         <p>Recaudación del Mes Anterior: {{ report_data.previous_balance }}</p>
         <p>Recaudación Real: {{ report_data.total_balance }}</p>
     </section>
+    <!-- Enlace para editar aportes, solo si está autorizado -->
+    <div class="text-center" style="margin-top: 20px;">
+        {% if session.get('authorized_edit') %}
+            <a href="{{ url_for('edit') }}" class="btn">Editar Aportes</a>
+        {% else %}
+            <a href="{{ url_for('request_edit_access') }}" class="btn">Solicitar Acceso de Edición</a>
+        {% endif %}
+    </div>
+</section>
 
-
-
-
-
-
-
-        <!-- Enlace para editar aportes, solo si está autorizado -->
-        <div class="text-center" style="margin-top: 20px;">
-            {% if session.get('authorized_edit') %}
-                <a href="{{ url_for('edit') }}" class="btn">Editar Aportes</a>
-            {% else %}
-                <a href="{{ url_for('request_edit_access') }}" class="btn">Solicitar Acceso de Edición</a>
-            {% endif %}
-        </div>
-    </section>
 
     <!-- Sección de Control -->
     <section id="control" style="display: none;">
@@ -326,7 +321,6 @@
         }
 
 
-// ------------------- Funciones para Reacciones (Me gusta y Corazoncito) ------------------- //
 // ------------------- Funciones para Reacciones (Me gusta y Corazoncito) ------------------- //
 
 function sendReaction(postId, reactionType) {
