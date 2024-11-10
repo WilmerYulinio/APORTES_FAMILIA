@@ -450,8 +450,13 @@ def save_contributions():
     return redirect(url_for('edit', month=selected_month))
 
 
-@app.route('/gastos', methods=['GET', 'POST'])
-def gastos():
+# Ruta de edición de gastos, solo accesible si tiene permisos
+@app.route('/edit_gastos', methods=['GET', 'POST'])
+def edit_gastos():
+    if not session.get('authorized_edit'):
+        flash("Acceso denegado. Solicita permisos para editar.")
+        return redirect(url_for('request_edit_access'))
+    
     selected_month = int(request.args.get('month', datetime.now().month))
     selected_year = int(request.args.get('year', datetime.now().year))
     month_key = f"{selected_year}-{selected_month:02d}"
@@ -463,28 +468,46 @@ def gastos():
     if request.method == 'POST':
         amount = float(request.form.get('amount'))
         reason = request.form.get('reason')
-        date = f"{selected_year}-{int(selected_month):02d}-{datetime.now().day:02d}"
+        date = f"{selected_year}-{selected_month:02d}-{datetime.now().day:02d}"
 
-        # Agregar el gasto al mes correspondiente
         if month_key not in expenses:
             expenses[month_key] = []
         
-        expenses[month_key].append({
-            "amount": amount,
-            "reason": reason,
-            "date": date
-        })
-        
+        expenses[month_key].append({"amount": amount, "reason": reason, "date": date})
         save_data('expenses.json', expenses)
         flash("Gasto agregado exitosamente.")
-        return redirect(url_for('gastos', month=selected_month, year=selected_year))
+        return redirect(url_for('edit_gastos', month=selected_month, year=selected_year))
 
-    return render_template(
-        'edit_gastos.html',  # Cambiado a 'edit_gastos.html'
-        month=selected_month,
-        year=selected_year,
-        month_expenses=month_expenses
-    )
+    return render_template('edit_gastos.html', month=selected_month, year=selected_year, month_expenses=month_expenses)
+
+
+# Ruta de visualización de gastos, sin permisos especiales
+@app.route('/view_gastos', methods=['GET'])
+def view_gastos():
+    selected_month = int(request.args.get('month', datetime.now().month))
+    selected_year = int(request.args.get('year', datetime.now().year))
+    month_key = f"{selected_year}-{selected_month:02d}"
+
+    # Cargar datos de gastos
+    expenses = load_data('expenses.json')
+    month_expenses = expenses.get(month_key, [])
+
+    return render_template('view_gastos.html', month=selected_month, year=selected_year, month_expenses=month_expenses)
+
+
+# Ruta de solicitud de acceso de edición
+@app.route('/request_edit_access', methods=['GET', 'POST'])
+def request_edit_access():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == EDIT_PASSWORD:
+            session['authorized_edit'] = True
+            flash("Acceso concedido para edición.")
+            return redirect(url_for('edit'))
+        else:
+            flash("Contraseña incorrecta.")
+    return render_template('request_edit_access.html')
+
 
 @app.route('/add_member', methods=['POST'])
 def add_member():
@@ -541,17 +564,7 @@ def delete_member():
     # Redirigir a la página de edición con los parámetros de mes y año
     return redirect(url_for('edit', month=selected_month, year=selected_year))
 
-@app.route('/request_edit_access', methods=['GET', 'POST'])
-def request_edit_access():
-    if request.method == 'POST':
-        password = request.form.get('password')
-        if password == EDIT_PASSWORD:
-            session['authorized_edit'] = True
-            return redirect(url_for('edit'))
-        else:
-            flash("Contraseña de edición incorrecta.")
-            return redirect(url_for('view'))
-    return render_template('request_edit_access.html')
+
 
 # ------------------ Ruta de Edición de Perfil ------------------ #
 @app.route('/edit_profile', methods=['GET', 'POST'])
