@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Gastos del Mes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <h2 class="text-center">Gastos del Mes: {{ month }}/{{ year }}</h2>
+    
+    <!-- Lista de Gastos Registrados -->
+    <h3>Gastos Registrados</h3>
+    <ul>
+        {% if month_expenses %}
+            {% for expense in month_expenses %}
+                <li>{{ expense['date'] }} - {{ expense['reason'] }}: S/. {{ expense['amount'] }}</li>
+            {% endfor %}
+        {% else %}
+            <p>No hay gastos registrados para este mes.</p>
+        {% endif %}
+    </ul>
+
+    <br>
+    <!-- Botón para regresar a la página de cuotas -->
+    <a href="{{ url_for('view') }}" class="btn btn-secondary">Volver a Ver Cuotas</a>
+</body>
+</html>
